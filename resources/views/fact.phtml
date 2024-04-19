@@ -70,6 +70,12 @@ if ($tag === 'MARR') {
     $type  = '';
 }
 
+// Use confirmation type as the label.  e.g. German "Firmung" for Catholic confirmation
+if ($tag === 'CONF') {
+    $label = $fact->label();
+    $type  = '';
+}
+
 ?>
 <tr class="<?= implode(' ', $styles) ?>">
     <th scope="row">

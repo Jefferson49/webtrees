@@ -461,6 +461,16 @@ class Fact
             }
         }
 
+        // Confirmations
+        if ($this->tag() === 'INDI:CONF') {
+            $element = Registry::elementFactory()->make('INDI:CONF:TYPE');
+            $type = $this->attribute('TYPE');
+
+            if ($type !== '') {
+                return $element->value($type, $this->record->tree());
+            }
+        }        
+
         // Custom FACT/EVEN - with a TYPE
         if ($this->tag === 'FACT' || $this->tag === 'EVEN') {
             $type = $this->attribute('TYPE');
