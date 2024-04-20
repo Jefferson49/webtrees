@@ -460,23 +460,21 @@ class Fact
                 return $element->value($type, $this->record->tree());
             }
         }
+      
+        // INDI tags with a TYPE
+        $type = $this->attribute('TYPE');
+        if (str_starts_with($this->tag(), 'INDI') && $type != '') {
 
-        // Custom FACT/EVEN - with a TYPE
-        if ($this->tag === 'FACT' || $this->tag === 'EVEN') {
-            $type = $this->attribute('TYPE');
+            if (!str_contains($type, '%')) {
+                // Allow user-translations of custom types.
+                $translated = I18N::translate($type);
 
-            if ($type !== '') {
-                if (!str_contains($type, '%')) {
-                    // Allow user-translations of custom types.
-                    $translated = I18N::translate($type);
-
-                    if ($translated !== $type) {
-                        return $translated;
-                    }
+                if ($translated !== $type) {
+                    return $translated;
                 }
-
-                return e($type);
             }
+
+            return e($type);
         }
 
         return Registry::elementFactory()->make($this->tag())->label();
