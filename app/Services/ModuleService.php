@@ -886,7 +886,17 @@ class ModuleService
                 continue;
             }
 
-            $module->boot();
+            if ($module instanceof ModuleCustomInterface) {
+                try {
+                    $module->boot();
+                } catch (Throwable $exception) {
+                    $message     = 'Fatal error in module: ' . $module->name() . '<br>' . $exception;
+                    FlashMessages::addMessage($message, 'danger');
+                }
+            }
+            else {
+                $module->boot();
+            }
         }
     }
 
