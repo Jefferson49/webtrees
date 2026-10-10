@@ -7,7 +7,9 @@
 /data/oauth2_server_keys/
 
 /modules_v4/
-/modules_deactivated/
+/modules_deactivated_wt_2.2/
+/modules_deactivated_wt_2.3/
+/modules_jefferson49/
 
 /node_modules/
 
