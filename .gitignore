@@ -1,6 +1,10 @@
 .phpunit.cache/
+*.ffs_db
 
 /build
+
+/data/cache/
+/data/oauth2_server_keys/
 
 /modules_v4/
 /modules_deactivated/
