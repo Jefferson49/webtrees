@@ -53,12 +53,19 @@ readonly class Router implements MiddlewareInterface
         // Ugly URLs store the path in a query parameter.
         $url_route = Validator::queryParams($request)->string('route', '');
 
+        // Strip the base path prefix — the Router expects route-relative paths.
+        $base_url  = $request->getAttribute('base_url');
+        $base_path = parse_url($base_url, PHP_URL_PATH);
+        $base_path = is_string($base_path) ? $base_path : '';
+
         if (Validator::attributes($request)->boolean('rewrite_urls', false)) {
             // We are creating pretty URLs, but received an ugly one. Probably a search-engine. Redirect it.
             if ($url_route !== '') {
                 $uri = $request->getUri()
                     ->withPath($url_route)
                     ->withQuery(explode('&', $request->getUri()->getQuery(), 2)[1] ?? '');
+
+                $uri = str_replace($url_route, $base_path . $url_route, $uri->__toString());
 
                 return Registry::responseFactory()
                     ->redirectUrl($uri, HttpStatusCode::PermanentRedirect)
@@ -69,11 +76,6 @@ readonly class Router implements MiddlewareInterface
         } else {
             $path = $url_route;
         }
-
-        // Strip the base path prefix — the Router expects route-relative paths.
-        $base_url  = $request->getAttribute('base_url');
-        $base_path = parse_url($base_url, PHP_URL_PATH);
-        $base_path = is_string($base_path) ? $base_path : '';
 
         if (str_starts_with($path, $base_path)) {
             // The URL path should always start with the path in the base URL.
